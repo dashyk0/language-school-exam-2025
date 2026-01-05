@@ -34,167 +34,164 @@
         </nav>
     </header>
 
-   <main>
-    <!-- Уведомление / анонс -->
-    <section class="bg-info-subtle py-3 border-bottom border-info">
-        <div class="container-fluid px-5">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
-                <div class="text-dark fw-medium">
-                    <strong>Welcome!</strong> Check out our new courses available this month!
+    <main>
+        <!-- Уведомление-->
+        <section class="bg-info-subtle py-3 border-bottom border-info">
+            <div class="container-fluid px-5">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
+                    <div class="text-dark fw-medium">
+                        <strong>Welcome!</strong> Check out our new courses available this month!
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-dark">Close</button>
                 </div>
-                <button type="button" class="btn btn-sm btn-outline-dark">Close</button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- About -->
-    <section class="py-4 bg-light">
-        <div class="container ps-3 ps-md-4">
-            <h2 class="h4 mb-3 fw-semibold">About Our Language School</h2>
-            <p class="mb-2">
-                SpeakEasy is a place where learning a language becomes a pleasure, not a duty.
-            </p>
-            <p class="mb-1">
-                We help students of all levels achieve fluency in English, German, French, Spanish, and more.
-            </p>
-        </div>
-    </section>
+        <!-- About Our Language School -->
+        <section class="py-4 bg-light">
+            <div class="container ps-3 ps-md-4">
+                <h2 class="h4 mb-3 fw-semibold">About Our Language School</h2>
+                <p class="mb-2">
+                    SpeakEasy is a place where learning a language becomes a pleasure, not a duty.
+                </p>
+                <p class="mb-1">
+                    We help students of all levels achieve fluency in English, German, French, Spanish, and more.
+                </p>
+            </div>
+        </section>
 
-    <!-- Преимущества (grid) -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5 fw-semibold">Advantages of Learning with SpeakEasy</h2>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-globe fs-1 text-primary mb-3"></i>
-                            <h5 class="card-title">Global Opportunities</h5>
-                            <p class="card-text">English opens doors worldwide.</p>
+        <!-- Преимущества-->
+        <section class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5 fw-semibold">Advantages of Learning with SpeakEasy</h2>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-globe fs-1 text-primary mb-3"></i>
+                                <h5 class="card-title">Global Language</h5>
+                                <p class="card-text">Opens doors worldwide.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-people fs-1 text-primary mb-3"></i>
+                                <h5 class="card-title">Expert Teachers</h5>
+                                <p class="card-text">Native speakers & certified professionals.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-chat-dots fs-1 text-primary mb-3"></i>
+                                <h5 class="card-title">Real Communication</h5>
+                                <p class="card-text">Focus on speaking from day one.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-people fs-1 text-primary mb-3"></i>
-                            <h5 class="card-title">Expert Teachers</h5>
-                            <p class="card-text">Native speakers & certified professionals.</p>
-                        </div>
+            </div>
+        </section>
+
+        <!-- Курсы -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center mb-4 fw-semibold">Courses Offered</h2>
+
+                <!-- Поиск -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <input id="courseSearch" type="text" class="form-control" placeholder="Search by name or level...">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary w-100">Search</button>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-chat-dots fs-1 text-primary mb-3"></i>
-                            <h5 class="card-title">Real Communication</h5>
-                            <p class="card-text">Focus on speaking from day one.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Курсы -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4 fw-semibold">Courses Offered</h2>
-
-            <!-- Поиск -->
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <input type="text" id="courseSearch" class="form-control" placeholder="Search courses by name or level...">
+                <!-- Таблица -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Level</th>
+                                <th>Duration</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                            <!-- JS заполнит -->
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary w-100">Search</button>
-                </div>
-            </div>
 
-            <!-- Таблица -->
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Course</th>
-                            <th>Level</th>
-                            <th>Duration</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="coursesTableBody">
+                <!-- Пагинация -->
+                <nav id="coursesPagination" aria-label="Course pagination">
+                    <ul class="pagination justify-content-center mt-4">
                         <!-- JS заполнит -->
-                    </tbody>
-                </table>
+                    </ul>
+                </nav>
             </div>
+        </section>
 
-            <!-- Пагинация -->
-            <nav id="coursesPagination" aria-label="Course pagination">
-                <ul class="pagination justify-content-center mt-4">
-                    <!-- JS заполнит -->
-                </ul>
-            </nav>
-        </div>
-    </section>
+        <!-- Репетиторы -->
+        <section class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-4 fw-semibold">Our Tutors</h2>
 
-    <!-- Репетиторы -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4 fw-semibold">Our Tutors</h2>
-
-            <!-- Поиск -->
-            <div class="row mb-4 g-3">
-                <div class="col-md-5">
-                    <select class="form-select">
-                        <option>Any qualification</option>
-                        <option>Native speaker</option>
-                        <option>Certified teacher</option>
-                    </select>
+                <!-- Поиск -->
+                <div class="row mb-4 g-3">
+                    <div class="col-md-5">
+                        <select class="form-select">
+                            <option>Any qualification</option>
+                            <option>Native speaker</option>
+                            <option>Certified teacher</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" placeholder="Experience (years)">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100">Search</button>
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    <input type="text" class="form-control" placeholder="Experience (years)">
+
+                <!-- Таблица -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Languages</th>
+                                <th>Experience</th>
+                                <th>Rate</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tutorsTableBody">
+                            <!-- JS заполнит -->
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100">Search</button>
+
+                <!-- Кнопка заявки -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal">Request a Tutor</button>
                 </div>
             </div>
+        </section>
+    </main>
 
-            <!-- Таблица -->
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Photo</th>
-                            <th>Name</th>
-                            <th>Languages</th>
-                            <th>Experience</th>
-                            <th>Rate</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="tutorsTableBody">
-                        <!-- JS заполнит -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Кнопка заявки -->
-            <div class="text-center mt-4">
-                <button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal">Request a Tutor</button>
-            </div>
-        </div>
-    </section>
-</main>
-
-<!-- Футер -->
-<footer class="bg-dark text-white py-4 mt-5">
-  <div class="container text-center">
-    <p>© 2026 SpeakEasy Language School. All rights reserved.</p>
+    <!-- Футер -->
+   <footer class="bg-dark py-4 mt-5">
+  <div class="container text-center text-white">
+    <p>© 2026 SpeakEasy Language School. Contact us: info@speakeasy.com | Follow us on Facebook, Twitter, Instagram</p>
   </div>
 </footer>
-
-   
-
 
     <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
