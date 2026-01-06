@@ -1,6 +1,5 @@
-// js/courses.js
-
 import { getCourses } from './api.js';
+import { filterTutorsByCourse, loadAndRenderTutors } from './tutors.js'; 
 
 let allCourses = [];
 let filteredCourses = [];
@@ -12,6 +11,7 @@ const coursesPagination = document.getElementById('coursesPagination');
 const courseSearchName = document.getElementById('courseSearchName');
 const courseSearchLevel = document.getElementById('courseSearchLevel');
 const courseSearchBtn = document.getElementById('courseSearchBtn');
+const requestBtn = document.getElementById('requestBtn');
 
 export async function loadAndRenderCourses() {
   console.log('Начало загрузки курсов...');
@@ -20,21 +20,26 @@ export async function loadAndRenderCourses() {
   filteredCourses = [...allCourses];
 
   if (allCourses.length === 0) {
-    console.error('Курсы не загрузились или пустой массив');
-    if (coursesList) coursesList.innerHTML = '<div class="text-danger p-3">Ошибка загрузки курсов. Проверьте консоль.</div>';
+    if (coursesList) coursesList.innerHTML = '<div class="text-danger p-3">Ошибка загрузки курсов</div>';
     return;
   }
 
-  console.log('Курсы успешно загружены:', allCourses.length, 'штук');
+  console.log('Курсы загружены:', allCourses.length);
+
+  // Загружаем репетиторов один раз
+  try {
+    await loadAndRenderTutors();
+    console.log('Репетиторы успешно загружены и отображены');
+  } catch (err) {
+    console.error('Ошибка при загрузке репетиторов:', err);
+  }
+
   renderCourses();
   renderPagination();
 }
 
 function renderCourses() {
-  if (!coursesList) {
-    console.error('Элемент #coursesList не найден');
-    return;
-  }
+  if (!coursesList) return;
 
   coursesList.innerHTML = '';
 
@@ -54,19 +59,36 @@ function renderCourses() {
     div.innerHTML = `${course.name}`;
 
     div.addEventListener('click', () => {
-      document.querySelectorAll('.course-item').forEach(item => item.classList.remove('bg-primary-subtle'));
+      // Снимаем выделение с других курсов
+      document.querySelectorAll('.course-item').forEach(item => {
+        item.classList.remove('bg-primary-subtle');
+      });
       div.classList.add('bg-primary-subtle');
+
+      // Сохраняем выбранный курс
       window.selectedCourse = course;
-      const input = document.getElementById('selectedCourse');
-      if (input) input.value = course.name;
-      if (requestBtn) requestBtn.disabled = true; // Деактивируем, пока репетитор не выбран
-      console.log('Выбран курс:', course.name);
+      const courseInput = document.getElementById('selectedCourse');
+      if (courseInput) courseInput.value = course.name;
+
+      // Сбрасываем выбор репетитора
+      window.selectedTutor = null;
+      const tutorInput = document.getElementById('selectedTutor');
+      if (tutorInput) tutorInput.value = '';
+      document.querySelectorAll('.tutor-item').forEach(item => {
+        item.classList.remove('bg-primary-subtle');
+      });
+
+      // Деактивируем кнопку заявки
+      if (requestBtn) requestBtn.disabled = true;
+
+      // Главное — фильтруем репетиторов по языку курса
+      filterTutorsByCourse(course);
+
+      console.log('Клик по курсу:', course.name, '— фильтрация репетиторов запущена');
     });
 
     coursesList.appendChild(div);
   });
-
-  console.log('Отрисовано курсов на странице:', pageCourses.length);
 }
 
 function renderPagination() {
@@ -75,10 +97,11 @@ function renderPagination() {
   const totalPages = Math.ceil(filteredCourses.length / PER_PAGE);
   coursesPagination.innerHTML = '';
 
+  if (totalPages <= 1) return;
+
   const ul = document.createElement('ul');
   ul.className = 'pagination justify-content-center';
 
-  // Previous
   const prev = document.createElement('li');
   prev.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
   prev.innerHTML = '<a class="page-link" href="#">«</a>';
@@ -103,7 +126,6 @@ function renderPagination() {
     ul.appendChild(li);
   }
 
-  // Next
   const next = document.createElement('li');
   next.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
   next.innerHTML = '<a class="page-link" href="#">»</a>';
@@ -119,16 +141,14 @@ function renderPagination() {
   coursesPagination.appendChild(ul);
 }
 
-// Функция поиска
+// Поиск курсов
 function applySearch() {
-  console.log('Поиск запущен');
-
-  const nameQuery = courseSearchName.value.toLowerCase().trim();
-  const levelQuery = courseSearchLevel.value;
+  const nameQuery = courseSearchName?.value.toLowerCase().trim() || '';
+  const levelQuery = courseSearchLevel?.value || '';
 
   filteredCourses = allCourses.filter(course => {
     const nameMatch = course.name.toLowerCase().includes(nameQuery);
-    const levelMatch = levelQuery === 'All levels' || course.level === levelQuery;
+    const levelMatch = levelQuery === '' || levelQuery === 'All levels' || course.level === levelQuery;
     return nameMatch && levelMatch;
   });
 
@@ -137,7 +157,6 @@ function applySearch() {
   renderPagination();
 }
 
-// Подключение событий для поиска
-courseSearchBtn.addEventListener('click', applySearch);
-courseSearchName.addEventListener('input', applySearch);
-courseSearchLevel.addEventListener('change', applySearch);
+courseSearchBtn?.addEventListener('click', applySearch);
+courseSearchName?.addEventListener('input', applySearch);
+courseSearchLevel?.addEventListener('change', applySearch);

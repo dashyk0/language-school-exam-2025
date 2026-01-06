@@ -135,42 +135,47 @@
 
         <!-- Репетиторы — точно как в примере -->
         <section class="py-5">
-            <div class="container">
-                <h2 class="mb-4 fw-semibold">Available Tutors</h2>
+    <div class="container">
+        <h2 class="mb-4 fw-semibold">Available Tutors</h2>
 
-                <!-- Список репетиторов -->
-                <div id="tutorsContainer">
-                    <!-- JS заполнит блоки вроде: -->
-                    <!-- <div class="border p-3 mb-3">Tutor 1 - Qualifications: MA in Russian - Experience: 5 years</div> -->
-                </div>
+        <!-- Динамический список репетиторов -->
+        <div id="tutorsList">
+            <!-- JS заполнит -->
+        </div>
 
-                <!-- Кнопка заявки -->
-                <div class="text-center my-4">
-                    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#requestModal"
-                            id="requestBtn" disabled>
-                        Request a Tutoring Session
-                    </button>
-                </div>
+        <!-- Пагинация репетиторов -->
+        <nav id="tutorsPagination" class="mt-4" aria-label="Пагинация репетиторов"></nav>
 
-                <!-- Поиск репетиторов -->
-                <h3 class="mb-3">Search for Tutors</h3>
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <select class="form-select" id="tutorQualification">
-                            <option>All Qualifications</option>
-                            <option>Native speaker</option>
-                            <option>Certified teacher</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="number" class="form-control" id="tutorExperience" placeholder="Experience (years)" min="0" autocomplete="off">
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary w-100" id="tutorSearchBtn">Search</button>
-                    </div>
-                </div>
+        <!-- Кнопка заявки -->
+        <div class="text-center my-5">
+            <button class="btn btn-success btn-lg" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#requestModal"
+                    id="requestBtn" 
+                    disabled>
+                Request a Tutoring Session
+            </button>
+        </div>
+
+        <!-- Поиск репетиторов -->
+        <h3 class="mb-3">Search for Tutors</h3>
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <select class="form-select" id="tutorQualification">
+                    <option value="">All Qualifications</option>
+                    <option>Native speaker</option>
+                    <option>Certified teacher</option>
+                </select>
             </div>
-        </section>
+            <div class="col-md-4">
+                <input type="number" class="form-control" id="tutorExperience" placeholder="Experience from (years)" min="0">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100" id="tutorSearchBtn">Search</button>
+            </div>
+        </div>
+    </div>
+</section>
     </main>
 
     <!-- Футер -->
@@ -180,40 +185,63 @@
         </div>
     </footer>
 
-    <!-- Модальное окно — оставляем как было, но адаптируем под логику -->
-    <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="requestModalLabel">Request a Tutoring Session</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="requestForm">
-                        <div class="mb-3">
-                            <label for="selectedCourse" class="form-label">Выбранный курс</label>
-                            <input type="text" class="form-control" id="selectedCourse" readonly autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <label for="selectedTutor" class="form-label">Выбранный репетитор</label>
-                            <input type="text" class="form-control" id="selectedTutor" readonly autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <label for="startDate" class="form-label">Дата начала</label>
-                            <input type="date" class="form-control" id="startDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="studentsCount" class="form-label">Количество студентов</label>
-                            <input type="number" class="form-control" id="studentsCount" min="1" value="1" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Отправить заявку</button>
-                    </form>
-                </div>
+    <!-- Модальное окно заявки -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="requestModalLabel">Оформить заявку на занятие</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form id="requestForm">
+                    <!-- Выбранный курс (только для чтения) -->
+                    <div class="mb-3">
+                        <label for="selectedCourse" class="form-label">Выбранный курс</label>
+                        <input type="text" class="form-control" id="selectedCourse" readonly>
+                    </div>
+
+                    <!-- Выбранный репетитор (только для чтения) -->
+                    <div class="mb-3">
+                        <label for="selectedTutor" class="form-label">Выбранный репетитор</label>
+                        <input type="text" class="form-control" id="selectedTutor" readonly>
+                    </div>
+
+                    <!-- Дата начала занятий -->
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Дата начала занятий <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="startDate" required>
+                    </div>
+
+                    <!-- Количество студентов -->
+                    <div class="mb-3">
+                        <label for="studentsCount" class="form-label">Количество студентов <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="studentsCount" min="1" value="1" required>
+                    </div>
+
+                    <!-- Имя пользователя -->
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Ваше имя <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userName" required autocomplete="name">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="userEmail" required autocomplete="email">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Отправить заявку</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/orders.js"></script>
     
 </body>
 </html>
