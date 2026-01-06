@@ -96,104 +96,124 @@
             </div>
         </section>
 
-        <!-- Курсы -->
         <section class="py-5 bg-light">
             <div class="container">
-                <h2 class="text-center mb-4 fw-semibold">Courses Offered</h2>
+                <h2 class="mb-4 fw-semibold">Courses Offered</h2>
 
-                <!-- Поиск -->
-                <div class="row mb-4">
-                    <div class="col-md-8">
-                        <input id="courseSearch" type="text" class="form-control" placeholder="Search by name or level...">
-                    </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-primary w-100">Search</button>
-                    </div>
+                <!-- Контейнер для динамического списка курсов -->
+                <div id="coursesList">
+                    <!-- Здесь JS будет вставлять курсы из API -->
                 </div>
 
-                <!-- Таблица -->
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Course</th>
-                                <th>Level</th>
-                                <th>Duration</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tbody id="coursesTableBody">
-                            <!-- JS заполнит -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Пагинация -->
-                <nav id="coursesPagination" aria-label="Course pagination">
-                    <ul class="pagination justify-content-center mt-4">
+                <!-- Пагинация курсов -->
+                <nav id="coursesPagination" aria-label="Пагинация курсов" class="mt-4">
+                    <ul class="pagination justify-content-center">
                         <!-- JS заполнит -->
                     </ul>
                 </nav>
+
+                <!-- Поиск курсов — точно как в примере -->
+                <h3 class="mt-5 mb-3">Search Courses</h3>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="courseSearchName" placeholder="Search by course name" autocomplete="off">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="courseSearchLevel">
+                            <option>All levels</option>
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="courseSearchBtn">Search</button>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Репетиторы -->
+        <!-- Репетиторы — точно как в примере -->
         <section class="py-5">
             <div class="container">
-                <h2 class="text-center mb-4 fw-semibold">Our Tutors</h2>
+                <h2 class="mb-4 fw-semibold">Available Tutors</h2>
 
-                <!-- Поиск -->
-                <div class="row mb-4 g-3">
+                <!-- Список репетиторов -->
+                <div id="tutorsContainer">
+                    <!-- JS заполнит блоки вроде: -->
+                    <!-- <div class="border p-3 mb-3">Tutor 1 - Qualifications: MA in Russian - Experience: 5 years</div> -->
+                </div>
+
+                <!-- Кнопка заявки -->
+                <div class="text-center my-4">
+                    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#requestModal"
+                            id="requestBtn" disabled>
+                        Request a Tutoring Session
+                    </button>
+                </div>
+
+                <!-- Поиск репетиторов -->
+                <h3 class="mb-3">Search for Tutors</h3>
+                <div class="row g-3 align-items-end">
                     <div class="col-md-5">
-                        <select class="form-select">
-                            <option>Any qualification</option>
+                        <select class="form-select" id="tutorQualification">
+                            <option>All Qualifications</option>
                             <option>Native speaker</option>
                             <option>Certified teacher</option>
                         </select>
                     </div>
-                    <div class="col-md-5">
-                        <input type="text" class="form-control" placeholder="Experience (years)">
+                    <div class="col-md-4">
+                        <input type="number" class="form-control" id="tutorExperience" placeholder="Experience (years)" min="0" autocomplete="off">
                     </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-primary w-100">Search</button>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100" id="tutorSearchBtn">Search</button>
                     </div>
-                </div>
-
-                <!-- Таблица -->
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Photo</th>
-                                <th>Name</th>
-                                <th>Languages</th>
-                                <th>Experience</th>
-                                <th>Rate</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tutorsTableBody">
-                            <!-- JS заполнит -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Кнопка заявки -->
-                <div class="text-center mt-4">
-                    <button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal">Request a Tutor</button>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- Футер -->
-   <footer class="bg-dark py-4 mt-5">
-  <div class="container text-center text-white">
-    <p>© 2026 SpeakEasy Language School. Contact us: info@speakeasy.com | Follow us on Facebook, Twitter, Instagram</p>
-  </div>
-</footer>
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p>Contact us: info@speakeasy.com | Follow us on Facebook, Twitter, Instagram</p>
+        </div>
+    </footer>
 
-    <script type="module" src="js/main.js"></script>
+    <!-- Модальное окно — оставляем как было, но адаптируем под логику -->
+    <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="requestModalLabel">Request a Tutoring Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="requestForm">
+                        <div class="mb-3">
+                            <label for="selectedCourse" class="form-label">Выбранный курс</label>
+                            <input type="text" class="form-control" id="selectedCourse" readonly autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="selectedTutor" class="form-label">Выбранный репетитор</label>
+                            <input type="text" class="form-control" id="selectedTutor" readonly autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Дата начала</label>
+                            <input type="date" class="form-control" id="startDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="studentsCount" class="form-label">Количество студентов</label>
+                            <input type="number" class="form-control" id="studentsCount" min="1" value="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить заявку</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script type="module" src="js/main.js"></script>
+    
 </body>
 </html>

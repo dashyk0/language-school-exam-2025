@@ -1,6 +1,6 @@
 import { loadAndRenderCourses } from './courses.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('SpeakEasy: запуск главной страницы');
+  console.log('Главная страница загружается...');
   loadAndRenderCourses();
 });

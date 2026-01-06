@@ -1,41 +1,67 @@
+// js/courses.js
+
 import { getCourses } from './api.js';
 
 let allCourses = [];
 let currentPage = 1;
-const perPage = 5;
+const PER_PAGE = 5;
 
-const tableBody = document.getElementById('coursesTableBody');
-const pagination = document.getElementById('coursesPagination');
-const searchInput = document.getElementById('courseSearch');
+const coursesList = document.getElementById('coursesList');
+const coursesPagination = document.getElementById('coursesPagination');
 
 export async function loadAndRenderCourses() {
+  console.log('Начало загрузки курсов...');
+
+  allCourses = await getCourses();
+
   if (allCourses.length === 0) {
-    allCourses = await getCourses();
+    console.error('Курсы не загрузились или пустой массив');
+    if (coursesList) coursesList.innerHTML = '<div class="text-danger p-3">Ошибка загрузки курсов. Проверьте консоль.</div>';
+    return;
   }
-  renderTable(allCourses);
-  renderPagination(allCourses.length);
+
+  console.log('Курсы успешно загружены:', allCourses.length, 'штук');
+  renderCourses();
+  renderPagination();
 }
 
-function renderTable(courses) {
-  tableBody.innerHTML = '';
+function renderCourses() {
+  if (!coursesList) {
+    console.error('Элемент #coursesList не найден в HTML');
+    return;
+  }
 
-  const start = (currentPage - 1) * perPage;
-  const end = start + perPage;
-  const pageCourses = courses.slice(start, end);
+  coursesList.innerHTML = '';
+
+  const start = (currentPage - 1) * PER_PAGE;
+  const end = start + PER_PAGE;
+  const pageCourses = allCourses.slice(start, end);
+
+  if (pageCourses.length === 0) {
+    coursesList.innerHTML = '<div class="text-muted">Курсы не найдены</div>';
+    return;
+  }
 
   pageCourses.forEach(course => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${course.name || '—'}</td>
-      <td>${course.level || '—'}</td>
+    const div = document.createElement('div');
+    div.className = 'border-bottom pb-2 mb-2';
+    div.style.cursor = 'pointer';
+    div.innerHTML = `
+      ${course.name}
     `;
-    tableBody.appendChild(row);
+    coursesList.appendChild(div);
   });
+
+  console.log('Отрисовано курсов на странице:', pageCourses.length);
 }
 
-function renderPagination(total) {
-  const totalPages = Math.ceil(total / perPage);
-  pagination.innerHTML = '';
+function renderPagination() {
+  if (!coursesPagination) return;
+
+  const totalPages = Math.ceil(allCourses.length / PER_PAGE);
+  coursesPagination.innerHTML = '';
+
+  if (totalPages <= 1) return;
 
   const ul = document.createElement('ul');
   ul.className = 'pagination justify-content-center';
@@ -43,17 +69,17 @@ function renderPagination(total) {
   // Previous
   const prev = document.createElement('li');
   prev.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-  prev.innerHTML = `<a class="page-link" href="#">Previous</a>`;
+  prev.innerHTML = '<a class="page-link" href="#">«</a>';
   prev.addEventListener('click', e => {
     e.preventDefault();
     if (currentPage > 1) {
       currentPage--;
-      loadAndRenderCourses();
+      renderCourses();
     }
   });
   ul.appendChild(prev);
 
-  // Страницы
+  // Номера
   for (let i = 1; i <= totalPages; i++) {
     const li = document.createElement('li');
     li.className = `page-item ${i === currentPage ? 'active' : ''}`;
@@ -61,38 +87,23 @@ function renderPagination(total) {
     li.addEventListener('click', e => {
       e.preventDefault();
       currentPage = i;
-      loadAndRenderCourses();
+      renderCourses();
     });
     ul.appendChild(li);
   }
 
-
+  // Next
   const next = document.createElement('li');
   next.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-  next.innerHTML = `<a class="page-link" href="#">Next</a>`;
+  next.innerHTML = '<a class="page-link" href="#">»</a>';
   next.addEventListener('click', e => {
     e.preventDefault();
     if (currentPage < totalPages) {
       currentPage++;
-      loadAndRenderCourses();
+      renderCourses();
     }
   });
   ul.appendChild(next);
 
-  pagination.appendChild(ul);
+  coursesPagination.appendChild(ul);
 }
-
-// Поиск
-if (searchInput) {
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.toLowerCase().trim();
-    const filtered = allCourses.filter(c => 
-      (c.name || '').toLowerCase().includes(query) ||
-      (c.level || '').toLowerCase().includes(query)
-    );
-    currentPage = 1;
-    renderTable(filtered);
-    renderPagination(filtered.length);
-  });
-}
-
