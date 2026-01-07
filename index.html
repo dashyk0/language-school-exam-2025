@@ -24,9 +24,8 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link active" href="index.html">Main</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">About us</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" href="account.html">User Account</a></li>
                     </ul>
                 </div>
@@ -167,6 +166,11 @@
     <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container text-center">
             <p>Contact us: info@speakeasy.com | Follow us on Facebook, Twitter, Instagram</p>
+            <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="bi bi-twitter"></i></a>
+                </div>
         </div>
     </footer>
 
@@ -202,11 +206,11 @@
                         <div class="mb-3">
                             <label for="startTimeSelect" class="form-label">Start time<span class="text-danger">*</span></label>
                             <select class="form-select" id="startTimeSelect" required disabled>
-                                <option value="">Сначала выберите дату</option>
+                                <option value="">Please select date and time</option>
                             </select>
                         </div>
 
-                        <!-- Продолжительность в неделях (как у друга) -->
+                        <!-- Продолжительность в неделях-->
                         <div class="mb-3">
                             <label class="form-label">Duration (in weeks)</label>
                             <input type="text" class="form-control" id="courseDuration" readonly>

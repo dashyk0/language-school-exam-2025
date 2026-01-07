@@ -1,5 +1,3 @@
-// js/courses.js
-
 import { getCourses } from './api.js';
 import { filterTutorsByCourse } from './tutors.js';
 
@@ -72,12 +70,10 @@ function renderCourses() {
 
       window.selectedCourse = course;
 
-      // Заполняем поля формы
       document.getElementById('selectedCourseName').value = course.name;
       document.getElementById('selectedTeacher').value = course.teacher || 'Не указан';
       document.getElementById('courseDuration').value = `${course.total_length} недель`;
 
-      // Очищаем предыдущие значения
       const dateSelect = document.getElementById('startDateSelect');
       const timeSelect = document.getElementById('startTimeSelect');
       dateSelect.innerHTML = '<option value="">Loading dates...</option>';
@@ -88,11 +84,9 @@ function renderCourses() {
       document.getElementById('studentsCount').value = '1';
       document.querySelectorAll('#requestForm input[type="checkbox"]').forEach(cb => cb.checked = false);
 
-      // Открываем модалку
       const modal = new bootstrap.Modal(document.getElementById('requestModal'));
       modal.show();
 
-      // Заполняем даты начала
       populateStartDates(course);
     });
 
@@ -102,47 +96,27 @@ function renderCourses() {
 
 function populateStartDates(course) {
   const dateSelect = document.getElementById('startDateSelect');
-  const timeSelect = document.getElementById('startTimeSelect');
+  dateSelect.innerHTML = '<option value="">Select data</option>';
 
-  if (!dateSelect || !course.start_dates || course.start_dates.length === 0) {
-    dateSelect.innerHTML = '<option value="">No dates available</option>';
-    timeSelect.disabled = true;
-    return;
-  }
-
-  dateSelect.innerHTML = '<option value="">Select start date</option>';
-
-  // Уникальные даты
-  const datesWithTimes = course.start_dates.map(dt => ({
-    date: dt.split('T')[0],
-    time: dt.split('T')[1].slice(0, 5) // HH:MM
-  }));
-
-  const uniqueDates = [...new Set(datesWithTimes.map(item => item.date))];
-
-  uniqueDates.sort().forEach(date => {
+  const uniqueDates = [...new Set(course.start_dates.map(dt => dt.split('T')[0]))];
+  uniqueDates.forEach(dateStr => {
     const option = document.createElement('option');
-    option.value = date;
-    option.textContent = new Date(date).toLocaleDateString('ru-RU');
+    option.value = dateStr;
+    option.textContent = new Date(dateStr).toLocaleDateString('ru-RU');
     dateSelect.appendChild(option);
   });
 
-  // Обработчик выбора даты — заполняем время
   dateSelect.addEventListener('change', () => {
-    const selectedDate = dateSelect.value;
+    const timeSelect = document.getElementById('startTimeSelect');
     timeSelect.innerHTML = '<option value="">Select time</option>';
     timeSelect.disabled = false;
 
-    if (!selectedDate) {
-      timeSelect.disabled = true;
-      return;
-    }
+    const selectedDate = dateSelect.value;
+    const times = course.start_dates
+      .filter(dt => dt.split('T')[0] === selectedDate)
+      .map(dt => dt.split('T')[1].slice(0, 5));
 
-    const timesForDate = datesWithTimes
-      .filter(item => item.date === selectedDate)
-      .map(item => item.time);
-
-    timesForDate.forEach(time => {
+    times.forEach(time => {
       const option = document.createElement('option');
       option.value = time;
       option.textContent = time;
@@ -154,9 +128,9 @@ function populateStartDates(course) {
 function renderPagination() {
   if (!coursesPagination) return;
 
-  const totalPages = Math.ceil(filteredCourses.length / PER_PAGE);
   coursesPagination.innerHTML = '';
 
+  const totalPages = Math.ceil(filteredCourses.length / PER_PAGE);
   if (totalPages <= 1) return;
 
   const ul = document.createElement('ul');
@@ -177,7 +151,7 @@ function renderPagination() {
   for (let i = 1; i <= totalPages; i++) {
     const li = document.createElement('li');
     li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+    li.innerHTML = '<a class="page-link" href="#">' + i + '</a>';
     li.addEventListener('click', e => {
       e.preventDefault();
       currentPage = i;

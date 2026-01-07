@@ -1,6 +1,7 @@
 // js/tutors.js
 import { getTutors } from './api.js';
 import { getLanguageFromCourse } from './utils.js';
+import { createOrder } from './api.js';
 
 let allTutors = [];
 let filteredTutors = [];
@@ -174,12 +175,13 @@ function applyFilters() {
   renderPagination();
 }
 
-document.getElementById('tutor-form')?.addEventListener('submit', async (e) => {
+// Submit формы репетитора
+document.getElementById('tutor-form').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  const userName = document.getElementById('user-name').value.trim();
-  const email = document.getElementById('user-email').value.trim();
-  const message = document.getElementById('tutor-message').value.trim();
+  const userName = document.getElementById('user-name')?.value.trim();
+  const email = document.getElementById('user-email')?.value.trim();
+  const message = document.getElementById('tutor-message')?.value.trim();
 
   if (!userName || !email) {
     alert('Заполните имя и email');
@@ -191,7 +193,7 @@ document.getElementById('tutor-form')?.addEventListener('submit', async (e) => {
     return;
   }
 
-  // Минимальные данные для API
+  // Дата через неделю (как в примере друга)
   const today = new Date('2026-01-07');
   const nextWeek = new Date(today);
   nextWeek.setDate(nextWeek.getDate() + 7);
@@ -211,18 +213,14 @@ document.getElementById('tutor-form')?.addEventListener('submit', async (e) => {
     personalized: true,
     excursions: false,
     assessment: false,
-    interactive: false,
-    // если API принимает имя и email клиента
-    client_name: userName,
-    client_email: email,
-    comment: message || null
+    interactive: false
   };
 
   try {
-    const result = await createOrder(orderData); // твоя функция createOrder
+    const result = await createOrder(orderData);
 
     if (result.success) {
-      alert('Заявка успешно отправлена!');
+      alert('Заявка к репетитору успешно отправлена!');
       bootstrap.Modal.getInstance(document.getElementById('tutorModal')).hide();
       document.getElementById('tutor-form').reset();
     } else {
@@ -233,6 +231,7 @@ document.getElementById('tutor-form')?.addEventListener('submit', async (e) => {
     console.error(err);
   }
 });
+
 tutorSearchBtn?.addEventListener('click', applyFilters);
 tutorQualification?.addEventListener('change', applyFilters);
 tutorExperience?.addEventListener('input', applyFilters);
