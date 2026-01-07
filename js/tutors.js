@@ -1,5 +1,4 @@
 // js/tutors.js
-
 import { getTutors } from './api.js';
 import { getLanguageFromCourse } from './utils.js';
 
@@ -13,14 +12,12 @@ const tutorsPagination = document.getElementById('tutorsPagination');
 const tutorQualification = document.getElementById('tutorQualification');
 const tutorExperience = document.getElementById('tutorExperience');
 const tutorSearchBtn = document.getElementById('tutorSearchBtn');
-const requestBtn = document.getElementById('requestBtn');
 
-// Функция фильтрации по языку курса (languages_offered содержит массив)
 export function filterTutorsByCourse(course) {
   if (!course || allTutors.length === 0) {
     filteredTutors = [...allTutors];
   } else {
-    const language = getLanguageFromCourse(course.name);
+    const language = getLanguageFromCourse(course.name).toLowerCase();
     if (language === '') {
       filteredTutors = [...allTutors];
     } else {
@@ -37,18 +34,10 @@ export function filterTutorsByCourse(course) {
 }
 
 export async function loadAndRenderTutors() {
-  console.log('Загрузка репетиторов...');
-  
   if (allTutors.length === 0) {
     allTutors = await getTutors();
-    console.log('Репетиторы загружены:', allTutors.length);
-    if (allTutors.length === 0) {
-      if (tutorsList) tutorsList.innerHTML = '<div class="text-danger p-3">Ошибка загрузки репетиторов</div>';
-      return;
-    }
     filteredTutors = [...allTutors];
   }
-  
   renderTutors();
   renderPagination();
 }
@@ -63,42 +52,56 @@ function renderTutors() {
   const pageTutors = filteredTutors.slice(start, end);
 
   if (pageTutors.length === 0) {
-    tutorsList.innerHTML = '<div class="text-muted p-3">Репетиторы не найдены</div>';
+    tutorsList.innerHTML = '<div class="text-muted p-3">No tutors found</div>';
     return;
   }
 
-  pageTutors.forEach(tutor => {
+ pageTutors.forEach(tutor => {
     const div = document.createElement('div');
-    div.className = 'border p-3 mb-3 tutor-item';
+    div.className = 'border-bottom pb-3 mb-3 d-flex justify-content-between align-items-center tutor-item';
     div.style.cursor = 'pointer';
-    
-    // Реальные поля из API
+
     const languages = tutor.languages_offered ? tutor.languages_offered.join(', ') : '—';
-    
+
     div.innerHTML = `
-      <strong>${tutor.name}</strong><br>
-      Level: ${tutor.language_level || '—'}<br>
-      Experience: ${tutor.work_experience || 0} years<br>
-      Languages offered: ${languages}<br>
-      Price: ${tutor.price_per_hour || 0} ₽/hour
+      <div>
+        <strong>${tutor.name}</strong><br>
+        <small class="text-muted">
+          Level: ${tutor.language_level || '—'} • 
+          Experience: ${tutor.work_experience || 0} лет • 
+          Languages: ${languages}
+        </small><br>
+        <small>Cost: ${tutor.price_per_hour || 0} ₽/hour</small>
+      </div>
+      <button class="btn btn-primary btn-sm enroll-btn">
+        Sign up
+      </button>
     `;
 
-    div.addEventListener('click', () => {
-      document.querySelectorAll('.tutor-item').forEach(el => el.classList.remove('bg-primary-subtle'));
+    // Клик по карточке — выделение
+    div.addEventListener('click', (e) => {
+      if (e.target.classList.contains('enroll-btn')) return;
+      document.querySelectorAll('.tutor-item').forEach(item => item.classList.remove('bg-primary-subtle'));
       div.classList.add('bg-primary-subtle');
+      window.selectedTutor = tutor;
+    });
 
+    // Клик по кнопке "Записаться"
+    div.querySelector('.enroll-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
       window.selectedTutor = tutor;
       
-      const input = document.getElementById('selectedTutor');
-      if (input) input.value = tutor.name;
+      // очищаем поля формы
+      document.getElementById('user-name').value = '';
+      document.getElementById('user-email').value = '';
+      document.getElementById('tutor-message').value = '';
 
-      if (requestBtn) requestBtn.disabled = false;
-      
-      console.log('Выбран репетитор:', tutor.name);
+      const modal = new bootstrap.Modal(document.getElementById('tutorModal'));
+      modal.show();
     });
 
     tutorsList.appendChild(div);
-  });
+});
 }
 
 function renderPagination() {
@@ -112,7 +115,6 @@ function renderPagination() {
   const ul = document.createElement('ul');
   ul.className = 'pagination justify-content-center';
 
-  // Previous
   const prev = document.createElement('li');
   prev.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
   prev.innerHTML = '<a class="page-link" href="#">Previous</a>';
@@ -125,7 +127,6 @@ function renderPagination() {
   });
   ul.appendChild(prev);
 
-  // Номера страниц
   for (let i = 1; i <= totalPages; i++) {
     const li = document.createElement('li');
     li.className = `page-item ${i === currentPage ? 'active' : ''}`;
@@ -138,7 +139,6 @@ function renderPagination() {
     ul.appendChild(li);
   }
 
-  // Next
   const next = document.createElement('li');
   next.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
   next.innerHTML = '<a class="page-link" href="#">Next</a>';
@@ -155,26 +155,17 @@ function renderPagination() {
 }
 
 function applyFilters() {
-  let baseList = allTutors; // если курс не выбран — от всех
-  if (window.selectedCourse) {
-    // Если курс выбран — берём уже отфильтрованный по языку список как основу
-    const language = getLanguageFromCourse(window.selectedCourse.name).toLowerCase();
-    if (language !== '') {
-      baseList = allTutors.filter(tutor =>
-        tutor.languages_offered && tutor.languages_offered.some(lang => 
-          lang.toLowerCase().includes(language)
-        )
-      );
-    }
-  }
-
   const levelFilter = tutorQualification?.value || '';
   const expMin = tutorExperience?.value ? Number(tutorExperience.value) : 0;
 
-  filteredTutors = baseList.filter(tutor => {
+  filteredTutors = allTutors.filter(tutor => {
     let match = true;
-    if (levelFilter) match = match && tutor.language_level === levelFilter;
-    if (expMin > 0) match = match && tutor.work_experience >= expMin;
+    if (levelFilter) {
+      match = match && tutor.language_level === levelFilter;
+    }
+    if (expMin > 0) {
+      match = match && tutor.work_experience >= expMin;
+    }
     return match;
   });
 
@@ -183,7 +174,65 @@ function applyFilters() {
   renderPagination();
 }
 
-// События
+document.getElementById('tutor-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const userName = document.getElementById('user-name').value.trim();
+  const email = document.getElementById('user-email').value.trim();
+  const message = document.getElementById('tutor-message').value.trim();
+
+  if (!userName || !email) {
+    alert('Заполните имя и email');
+    return;
+  }
+
+  if (!window.selectedTutor) {
+    alert('Репетитор не выбран');
+    return;
+  }
+
+  // Минимальные данные для API
+  const today = new Date('2026-01-07');
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  const dateStart = nextWeek.toISOString().split('T')[0];
+
+  const orderData = {
+    tutor_id: window.selectedTutor.id,
+    date_start: dateStart,
+    time_start: '10:00',
+    duration: 1,
+    persons: 1,
+    price: window.selectedTutor.price_per_hour,
+    early_registration: false,
+    group_enrollment: false,
+    intensive_course: false,
+    supplementary: false,
+    personalized: true,
+    excursions: false,
+    assessment: false,
+    interactive: false,
+    // если API принимает имя и email клиента
+    client_name: userName,
+    client_email: email,
+    comment: message || null
+  };
+
+  try {
+    const result = await createOrder(orderData); // твоя функция createOrder
+
+    if (result.success) {
+      alert('Заявка успешно отправлена!');
+      bootstrap.Modal.getInstance(document.getElementById('tutorModal')).hide();
+      document.getElementById('tutor-form').reset();
+    } else {
+      alert('Ошибка: ' + (result.error || 'Неизвестная ошибка'));
+    }
+  } catch (err) {
+    alert('Ошибка сети');
+    console.error(err);
+  }
+});
 tutorSearchBtn?.addEventListener('click', applyFilters);
 tutorQualification?.addEventListener('change', applyFilters);
 tutorExperience?.addEventListener('input', applyFilters);
