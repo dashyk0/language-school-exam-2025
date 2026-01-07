@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://exam-api-courses.std-900.ist.mospolytech.ru/api';
+const API_BASE_URL = 'https://exam-api-courses.std-900.ist.mospolytech.ru/api';
 const API_KEY = '2d451ee9-0077-47ae-9708-61c16e452353';
 
 export async function getCourses() {
